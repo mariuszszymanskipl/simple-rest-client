@@ -6,6 +6,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>countries</module>
+        <module>icd-9-pl</module>
     </modules>
     <packaging>pom</packaging>
     <dependencies>
