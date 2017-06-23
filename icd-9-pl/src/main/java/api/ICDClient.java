@@ -1,6 +1,6 @@
 package api;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
+import domain.Category;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -8,6 +8,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Mariusz Szymanski
@@ -20,7 +22,9 @@ class ICDClient {
             + "/resource/a3647fe8-8e50-4836-b816-ec6861fac35f"
             + "/download/icd-9plw.5.33.xls";
 
-    int getICD() {
+    List<Category> getICDClassification() {
+
+        List<Category> classification = new ArrayList<>();
 
         try {
             InputStream inputStream = new URL(ICD9_SERVICE_URL).openStream();
@@ -28,15 +32,31 @@ class ICDClient {
 
             HSSFSheet sheet = wb.getSheetAt(0);
             HSSFRow row;
-            HSSFCell cell;
 
-            int rows = sheet.getPhysicalNumberOfRows(); // No of rows
-            int cols = sheet.getRow(2).getPhysicalNumberOfCells(); // No of columns
+            int rows = sheet.getPhysicalNumberOfRows();
 
-            return rows;
+            for (int r = 2; r < rows; r++) {
+                row = sheet.getRow(r);
+                if (row != null) {
+                    Category category = new Category();
+                    category.setChapterNumber(row.getCell(0).toString());
+                    category.setChapter(row.getCell(1).toString());
+                    category.setBlockNumber(row.getCell(2).toString());
+                    category.setBlock(row.getCell(3).toString());
+                    category.setMainCategoryNumber(row.getCell(4).toString());
+                    category.setMainCategory(row.getCell(5).toString());
+                    if (row.getCell(6) != null) {
+                        category.setDetailedCategoryNumber(row.getCell(6).toString());
+                    }
+                    if (row.getCell(7) != null) {
+                        category.setDetailedCategory(row.getCell(7).toString());
+                    }
+                    classification.add(category);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return 0;
+        return classification;
     }
 }
