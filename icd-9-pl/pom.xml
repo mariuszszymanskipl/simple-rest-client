@@ -12,5 +12,12 @@
     <build>
         <finalName>icd-9-pl-rest-client</finalName>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.15</version>
+        </dependency>
+    </dependencies>
 
 </project>
